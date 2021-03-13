@@ -176,7 +176,8 @@ This example checks the health of a fictitious software product:
 
 ## List of PIV Commands
 
-All commands must start in column 1:
+All commands must start in column 1 and are case insensitive.
+The uppercase letters are the minimum abbreviation for each of the commands shown below.
 
 | Command | Description |
 | ------- | ----------- |
@@ -188,7 +189,9 @@ All commands must start in column 1:
 | [**SYS**name \[*sysname*\]](#SYSname-sysname) | Filter SPOOL files by system name. Reset the filter by omitting the system name |
 | [**DEST** \[*destname*\]](#DEST-destname) | Filter SPOOL files by destination name. Reset the filter by omitting the destination name |
 | [*sdsfcommand*](#sdsfcommand) | Issue an SDSF primary command (e.g. DA, I, O, etc) - optionally filtered by prior `PREFIX`, `OWNER`, `SYSNAME` and `DEST` commands |
+| [**?**](#?) | List the spool datasets for this job. You must first issue an SDSF primary command (DA, I, O, etc) |
 | [**S**elect *jobname* \[*sysoutdd* \[*stepname* \[*procstep*\]\]](#Select-jobname-sysoutdd-stepname-procstep) | Read the specified JES SPOOL dataset(s) for a job into REXX `line.n` stem variables. The datasets to be read can optionally be filtered by *sysoutdd* etc). You must first issue an SDSF primary command (DA, I, O, etc) |
+| [**SORT** sortspec](#SORT-sortspec) | Sort the tabular output from an SDSF primary command (DA, I, O, etc) according to the sort specification (e.g. SORT DATEE D TIMEE D). You must enter column names rather than column titles. Issue the `SHOW ?` command to list the gamut of column names after you have selected the SDSF primary command (DA, I, O etc).
 | [**USS** *usscommand*](#USS-usscommand) | Issue a USS command (e.g. cat /etc/profile) and capture the output into REXX `line.n` stem variables |
 | [**READ** {*dsn* \| *ddname* \| *pathname*}](#READ-dsn--ddname--pathname) | Read a dataset or PDS member, a DD name, or a Unix file into REXX `line.n` stem variables |
 | [**SET** *var* **=** *value*](#SET-var--value) | Set a REXX variable (usually, an SDSF special variable such as ISFPRTDSNAME) prior to issuing an SDSF export command (XD, XDC, XF, XFC) |
@@ -196,14 +199,14 @@ All commands must start in column 1:
 | [**XDC** *jobname* \[*sysoutdd* \[*stepname* \[*procstep*\]\]](#XDC-jobname-sysoutdd-stepname-procstep) | Same as XD but Close the dynamically allocated output dataset afterwards |
 | [**XF**  *jobname* \[*sysoutdd* \[*stepname* \[*procstep*\]\]](#XF-jobname-sysoutdd-stepname-procstep)   | Export and append the specified JES sysout dataset to a pre-allocated output DD name (identified by the ISFPRTDDNAME REXX variable) |
 | [**XFC** *jobname* \[*sysoutdd* \[*stepname* \[*procstep*\]\]](#XFC-jobname-sysoutdd-stepname-procstep) | Same as XF but Close the pre-allocated output DD name afterwards |
-| [**SH**ow **?**](#SHOW) | After issuing an SDSF primary command (DA, I, O, etc) display all the available column names |
-| [**SH**ow *column* \[*column* ...\]](#SHOW-column-column) | After issuing an SDSF primary command (DA, I, O, etc) display the values in just the specified columns (issue `SHOW ?` to discover the gamut of column names) |
+| [**SH**ow **?**](#SHOW-) | After issuing an SDSF primary command (DA, I, O, etc) display all the available column names |
+| [**SH**ow *column* \[*column* ...\]](#SHOW-column-column-) | After issuing an SDSF primary command (DA, I, O, etc) display the values in just the specified columns (issue `SHOW ?` to discover the gamut of column names) |
 | [**SH**ow **ON**](#SHOW-ON) | Enable automatic display of command responses |
 | [**SH**ow **OFF**](#SHOW-OFF) | Suppress display of command responses |
-| [**SH**ow](#SHOW-1) | Display the response lines for the previous command (even if automatic display is suppressed)|
+| [**SH**ow](#SHOW) | Display the response lines for the previous command (even if automatic display is suppressed)|
 | [**SH**ow *nnn*](#SHOW-nnn) | Limit command response output to *nnn* lines |
 | [**SH**ow *heading*\[,*m*\[,*n*\]\]](#SHOW-headingmn) | Display a command response heading of *heading*, and limit command response output to lines *m* to *n* |
-| [**SH**ow '*word* \[*word* ...\]'](#SHOW-word-word) | Display only those command response lines at contain at least one of the specified words |
+| [**SH**ow '*word* \[*word* ...\]'](#SHOW-word-word-) | Display only those command response lines at contain at least one of the specified words |
 | [**ASSERT** *expression*](#ASSERT-expression) | Evaluates the REXX expression *expression* and sets return code (rc) 0 if true, or 4 if false |
 | [**IF** *expression* **THEN** rc **=** *n*; **ELSE** ...](#IF-expression-THEN-rc--n--else) | Evaluates the REXX expression *expression* and sets rc to a user-specified return code *n* |
 | [**USING** *template*](#USING-template) | Defines a REXX parsing template for use by the `PASSIF` and `FAILIF` commands |
