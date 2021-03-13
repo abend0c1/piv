@@ -208,7 +208,7 @@ The uppercase letters are the minimum abbreviation for each of the commands show
 | [**SH**ow *heading*\[,*m*\[,*n*\]\]](#SHOW-headingmn) | Display a command response heading of *heading*, and limit command response output to lines *m* to *n* |
 | [**SH**ow '*word* \[*word* ...\]'](#SHOW-word-word-) | Display only those command response lines at contain at least one of the specified words |
 | [**ASSERT** *expression*](#ASSERT-expression) | Evaluates the REXX expression *expression* and sets return code (rc) 0 if true, or 4 if false |
-| [**IF** *expression* **THEN** rc **=** *n*; **ELSE** ...](#IF-expression-THEN-rc--n--else) | Evaluates the REXX expression *expression* and sets rc to a user-specified return code *n* |
+| [**IF** *expression* **THEN** rc **=** *n*; **ELSE** ...](#if-expression-then-rc--n--else-) | Evaluates the REXX expression *expression* and sets rc to a user-specified return code *n* |
 | [**USING** *template*](#USING-template) | Defines a REXX parsing template for use by the `PASSIF` and `FAILIF` commands |
 | [**PASSIF** *expression*](#PASSIF-expression) | Sets return code 0 if a response line is found where the *expression* evaluates to 1 (true), else sets return code 4. You must first issue the `USING` command to set up a parsing template. |
 | [**FAILIF** *expression*](#FAILIF-expression) | Sets return code 4 if a response line is found where the *expression* evaluates to 1 (true), else sets return code 0. You must first issue the `USING` command to set up a parsing template. |
@@ -265,6 +265,10 @@ an SDSF primary command (DA, O, I etc).
 
 You can refine the sysout to be selected by
 sysoutdd, step name, and proc step name.
+
+### **SORT** sortspec
+
+Sort the tabular output from an SDSF primary command (DA, I, O, etc) according to the sort specification (e.g. SORT DATEE D TIMEE D). You must enter column names rather than column titles. Issue the `SHOW ?` command to list the gamut of column names after you have selected the SDSF primary command (DA, I, O etc).
 
 ### USS *usscommand*
 
