@@ -1,0 +1,75 @@
+..auto Creating JCL to start or stop a TCPIP packet trace
+...
+... This file uses the JAM REXX exec to generate JCL.
+... Please see https://github.com/abend0c1/jam for information on how
+... to install and use JAM.
+...
+... To convert this file to JCL, simply type JAM on the ISPF/EDIT command line.
+...
+... This example makes starting and stopping TCP/IP packet traces
+... much easier because you don't have to remember the syntax of all
+... the arcane z/OS operator commands needed to get it to happen.
+...
+... The following names do not change often, so customise them for your site here
+..set tcpip = 'TCPIP'   /* TCP address space started task name */
+..set writer = 'PTTCP'  /* TCP packet trace writer proc name   */
+..set rexxlib = 'your.rexx.lib' /* Your REXX library           */
+...
+... Ask the user for the LPAR name and the action (start or stop)
+...
+..askqu lpar TST1 Enter LPAR name
+..askqu action S Start or stop? (S=Start, P=Stop)
+..if [\inSet(action,'S P')]
+..  quit cancel Specify S (start) or P (stop)
+..end
+..select [action]
+..  when 'S'
+..    set desc = 'START'
+..    askqu ipaddr 10.0.0.1/24 Enter IP address (/mask) to be traced
+..  when 'P'
+..    set desc = 'STOP'
+..end
+..runon [lpar] [member] [lpar] [desc]
+//PIV      EXEC PGM=IKJEFT1A,PARM='%PIV'
+//SYSEXEC  DD DISP=SHR,DSN=[rexxlib]
+//SYSTSIN  DD DUMMY
+//SYSTSPRT DD SYSOUT=*
+//INPUT    DD DATA,DLM='++'
+..if [action = 'S']
+  Clear any existing TCPIP packet trace settings
+/V [tcpip],,PKTTRACE,CLEAR
+
+  Start the packet trace writer
+/TRACE CT,WTRSTART=[writer],WRAP
+
+  Turn on the component trace
+/TRACE CT,ON,COMP=SYSTCPDA,SUB=([tcpip])
+
+  Connect it to the writer
+reply ITT006A WTR=[writer],end
+
+  Tell TCPIP to start capturing packets
+/V [tcpip],,PKTTRACE,ON,FULL,IP=[ipaddr]
+..else
+  Tell TCPIP to stop capturing packets
+/V [tcpip],,PKTTRACE,OFF
+
+  Turn off the component trace
+/TRACE CT,OFF,COMP=SYSTCPDA,SUB=([tcpip])
+
+  Stop the packet trace writer
+/TRACE CT,WTRSTOP=[writer]
+..end
+++
+..say Examine the JCL and submit when ready
+..say
+..say After you stop the trace, you can run [dataset](PKTSNIFF) to convert the packet
+..say trace data into SNIFFER format. To view the SNIFFER trace data, download it to your
+..say laptop as a *.pcap file (in binary mode) and open it with Wireshark.
+..say 
+..say Wireshark is available for Linux, Windows and Mac at:
+..say https://www.wireshark.org/download.html
+..say
+..say Wireshark is vastly superior than using IPCS to decode mainframe packet traces
+..say as it provides full color coding of packets, filtering and expert analysis of
+..say the captured packets.

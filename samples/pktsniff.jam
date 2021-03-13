@@ -1,0 +1,46 @@
+..auto Creating JCL to convert a packet trace to SNIFFER format
+...
+... This file uses the JAM REXX exec to generate JCL.
+... Please see https://github.com/abend0c1/jam for information on how
+... to install and use JAM.
+...
+... To convert this file to JCL, simply type JAM on the ISPF/EDIT command line.
+...
+... This example converts a mainframe packet trace file to SNIFFER format
+... so that it can be examined with open source Wireshark software.
+...
+... Ask the user for the LPAR name and the input and output dataset names
+...
+..askqu lpar TST1 Enter LPAR name
+..askqu dsn SYS1.PTRACE Enter input packet trace dataset name
+..askqu out [u].SNIFFER Enter output sniffer dataset name
+..runon [lpar] [member] [lpar]
+..set lrecl = 4058
+..* Delete the output SNIFFER file
+..br14
+//DEL       DD DISP=(MOD,DELETE,DELETE),
+//             DSN=[out],
+//             RECFM=VB,LRECL=[lrecl],BLKSIZE=27990,
+//             SPACE=(TRK,(1,1),RLSE)
+..* Convert packet trace to SNIFFER format
+//STEP1   EXEC PGM=IKJEFT01
+//IPCSDDIR  DD DISP=SHR,DSN=[u].DUMP.DIRECTRY
+//SYSPROC   DD DISP=SHR,DSN=SYS1.SBLSCLI0 IPCS CLIST library
+//SYSUDUMP  DD SYSOUT=*
+//SYSTSPRT  DD SYSOUT=*
+//SNIFFER   DD DSN=[out],
+//             DISP=(NEW,CATLG),
+//             RECFM=VB,LRECL=[lrecl],BLKSIZE=27990,
+//             SPACE=(CYL,(10,10),RLSE)
+//SYSTSIN   DD *
+  IPCS
+  DROPDUMP DSN('[dsn]')
+  SETDEF DSN('[dsn])'
+  CTRACE COMP(SYSTCPDA) FULL -
+         OPTIONS((SNIFFER([lrecl],TCPDUMP) NOREASSEMBLY NOCHECKSUM))
+  END
+/*
+..say Examine the JCL and submit when ready
+..say
+..say After the [out] file is created, download it (binary) to your
+..say laptop and open it with Wireshark for analysis.
