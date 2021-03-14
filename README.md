@@ -206,7 +206,7 @@ The uppercase letters are the minimum abbreviation for each of the commands show
 | [**SH**ow](#SHOW) | Display the response lines for the previous command (even if automatic display is suppressed)|
 | [**SH**ow *nnn*](#SHOW-nnn) | Limit command response output to *nnn* lines |
 | [**SH**ow *heading*\[,*m*\[,*n*\]\]](#SHOW-headingmn) | Display a command response heading of *heading*, and limit command response output to lines *m* to *n* |
-| [**SH**ow '*word* \[*word* ...\]'](#SHOW-word-word-) | Display only those command response lines at contain at least one of the specified words |
+| [**SH**ow '*str* \[*str* ...\]'](#SHOW-str-str-) | Display only those command response lines at contain at least one of the specified strings |
 | [**ASSERT** *expression*](#ASSERT-expression) | Evaluate the REXX expression *expression* and set return code (rc) 0 if true, or 4 if false |
 | [**IF** *expression* **THEN** rc **=** *n*; **ELSE** ...](#if-expression-then-rc--n--else-) | Evaluate the REXX expression *expression* and set rc to a user-specified return code *n* |
 | [**USING** *template*](#USING-template) | Define a REXX parsing template for use by the `PASSIF` and `FAILIF` commands |
@@ -426,15 +426,18 @@ is relative to the last line, so for example:
 ...will print the heading `LAST FEW LINES` followed
 by the last 5 lines of output.
 
-### SHOW '*word* [*word* ...]'
+### SHOW '*str* [*str* ...]'
 
 Prints only output lines that contain at least one of the
-specified words.
+specified strings.
 
 This is useful when you only want to see messages
 relating to a limited subject, for example:
 
-    show 'LICENSE EXPIRE ERROR INVALID ABEND'
+    show 'LICENSE EXPIR'
+
+...would show lines containing any of 'LICENSE', 'LICENSED', 'UNLICENSED',
+'EXPIRED' 'EXPIRES' 'EXPIRATION'.
 
 ### ASSERT *expression*
 
