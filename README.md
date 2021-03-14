@@ -190,7 +190,7 @@ The uppercase letters are the minimum abbreviation for each of the commands show
 | [**DEST** \[*destname*\]](#DEST-destname) | Filter SPOOL files by destination name. Reset the filter by omitting the destination name |
 | [**SORT** sortspec](#SORT-sortspec) | Set the column sorting order for tabular output from an SDSF primary command (DA, I, O, etc)
 | [*sdsfcommand*](#sdsfcommand) | Issue an SDSF primary command (e.g. DA, I, O, etc) - optionally filtered by prior `PREFIX`, `OWNER`, `SYSNAME` and `DEST` commands |
-| [**?**](#?) | List the spool datasets for this job. You must first issue an SDSF primary command (DA, I, O, etc) |
+| [**?**](#) | List the spool datasets for this job. You must first issue an SDSF primary command (DA, I, O, etc) |
 | [**S**elect *jobname* \[*sysoutdd* \[*stepname* \[*procstep*\]\]](#Select-jobname-sysoutdd-stepname-procstep) | Read the specified JES SPOOL dataset(s) for a job into REXX `line.n` stem variables. The datasets to be read can optionally be filtered by *sysoutdd* etc). You must first issue an SDSF primary command (DA, I, O, etc) |
 | [**USS** *usscommand*](#USS-usscommand) | Issue a USS command (e.g. cat /etc/profile) and capture the output into REXX `line.n` stem variables |
 | [**READ** {*dsn* \| *ddname* \| *pathname*}](#READ-dsn--ddname--pathname) | Read a dataset or PDS member, a DD name, or a Unix file into REXX `line.n` stem variables |
