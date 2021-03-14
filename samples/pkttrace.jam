@@ -70,6 +70,6 @@ reply ITT006A WTR=[writer],end
 ..say Wireshark is available for Linux, Windows and Mac at:
 ..say https://www.wireshark.org/download.html
 ..say
-..say Wireshark is vastly superior than using IPCS to decode mainframe packet traces
+..say Wireshark is vastly superior to using IPCS to decode mainframe packet traces
 ..say as it provides full color coding of packets, filtering and expert analysis of
 ..say the captured packets.

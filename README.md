@@ -34,7 +34,7 @@ PIV can be used to:
   verify that the content is as expected.
 
 The result of this checking is indicated in the job step condition code
-of the step running the PIV EXEC. It then sets the job step condition code.
+of the step running the PIV EXEC.
 Usually COND CODE 0 means "all good" and COND CODE 4 means "PIV failed" -
 but you can set whatever condition code you want.
 This enables you to take further automated action
@@ -45,7 +45,7 @@ responses received, which makes for an excellent audit artifact.
 
 ## PREREQUISITES
 
-1. To fully benefit from PIV you will need appropriate RACF access to:
+1. To fully benefit from PIV you will need appropriate RACF authorisations to:
   - Issue SDSF console commands
   - Read SDSF spool files
   - Read Unix System Services files
@@ -84,7 +84,7 @@ testing (for example, by `ASSERT` commands).
 The PIV SDSF commands are pretty much identical to the SDSF primary commands that
 everyone is familiar with, so the learning curve is minimal.
 
-There are also some PIV commands that can be used to verify
+However, there are some additional PIV commands that can be used to verify
 the system state (`ASSERT`, `IF` and `USING`, `PASSIF`, `FAILIF`) and set the
 job step condition code accordingly.
 
@@ -188,30 +188,30 @@ The uppercase letters are the minimum abbreviation for each of the commands show
 | [**OWN**er \[*userid*\]](#OWNer-userid) | Filter SPOOL files by owner name. Reset the filter by omitting the owner name |
 | [**SYS**name \[*sysname*\]](#SYSname-sysname) | Filter SPOOL files by system name. Reset the filter by omitting the system name |
 | [**DEST** \[*destname*\]](#DEST-destname) | Filter SPOOL files by destination name. Reset the filter by omitting the destination name |
+| [**SORT** sortspec](#SORT-sortspec) | Set the column sorting order for tabular output from an SDSF primary command (DA, I, O, etc)
 | [*sdsfcommand*](#sdsfcommand) | Issue an SDSF primary command (e.g. DA, I, O, etc) - optionally filtered by prior `PREFIX`, `OWNER`, `SYSNAME` and `DEST` commands |
 | [**?**](#?) | List the spool datasets for this job. You must first issue an SDSF primary command (DA, I, O, etc) |
 | [**S**elect *jobname* \[*sysoutdd* \[*stepname* \[*procstep*\]\]](#Select-jobname-sysoutdd-stepname-procstep) | Read the specified JES SPOOL dataset(s) for a job into REXX `line.n` stem variables. The datasets to be read can optionally be filtered by *sysoutdd* etc). You must first issue an SDSF primary command (DA, I, O, etc) |
-| [**SORT** sortspec](#SORT-sortspec) | Sort the tabular output from an SDSF primary command (DA, I, O, etc) according to the sort specification (e.g. SORT DATEE D TIMEE D). You must enter column names rather than column titles. Issue the `SHOW ?` command to list the gamut of column names after you have selected the SDSF primary command (DA, I, O etc).
 | [**USS** *usscommand*](#USS-usscommand) | Issue a USS command (e.g. cat /etc/profile) and capture the output into REXX `line.n` stem variables |
 | [**READ** {*dsn* \| *ddname* \| *pathname*}](#READ-dsn--ddname--pathname) | Read a dataset or PDS member, a DD name, or a Unix file into REXX `line.n` stem variables |
 | [**SET** *var* **=** *value*](#SET-var--value) | Set a REXX variable (usually, an SDSF special variable such as ISFPRTDSNAME) prior to issuing an SDSF export command (XD, XDC, XF, XFC) |
-| [**XD**  *jobname* \[*sysoutdd* \[*stepname* \[*procstep*\]\]](#XD-jobname-sysoutdd-stepname-procstep)   | Export and append the specified JES sysout dataset to a dynamically allocated output dataset (identified by the ISFPRTDSNAME REXX variable) |
+| [**XD**  *jobname* \[*sysoutdd* \[*stepname* \[*procstep*\]\]](#XD-jobname-sysoutdd-stepname-procstep)  | Export and append the specified JES sysout dataset to a dynamically allocated output dataset (identified by the ISFPRTDSNAME REXX variable) |
 | [**XDC** *jobname* \[*sysoutdd* \[*stepname* \[*procstep*\]\]](#XDC-jobname-sysoutdd-stepname-procstep) | Same as XD but Close the dynamically allocated output dataset afterwards |
-| [**XF**  *jobname* \[*sysoutdd* \[*stepname* \[*procstep*\]\]](#XF-jobname-sysoutdd-stepname-procstep)   | Export and append the specified JES sysout dataset to a pre-allocated output DD name (identified by the ISFPRTDDNAME REXX variable) |
+| [**XF**  *jobname* \[*sysoutdd* \[*stepname* \[*procstep*\]\]](#XF-jobname-sysoutdd-stepname-procstep)  | Export and append the specified JES sysout dataset to a pre-allocated output DD name (identified by the ISFPRTDDNAME REXX variable) |
 | [**XFC** *jobname* \[*sysoutdd* \[*stepname* \[*procstep*\]\]](#XFC-jobname-sysoutdd-stepname-procstep) | Same as XF but Close the pre-allocated output DD name afterwards |
-| [**SH**ow **?**](#SHOW-) | After issuing an SDSF primary command (DA, I, O, etc) display all the available column names |
-| [**SH**ow *column* \[*column* ...\]](#SHOW-column-column-) | After issuing an SDSF primary command (DA, I, O, etc) display the values in just the specified columns (issue `SHOW ?` to discover the gamut of column names) |
+| [**SH**ow **?**](#SHOW-) | Display the gamut of column names for the most recently issued SDSF primary command (DA, I, O, etc)  |
+| [**SH**ow *column* \[*column* ...\]](#SHOW-column-column-) | Display the values in just the specified columns (after issuing an SDSF primary command (DA, I, O, etc) |
 | [**SH**ow **ON**](#SHOW-ON) | Enable automatic display of command responses |
 | [**SH**ow **OFF**](#SHOW-OFF) | Suppress display of command responses |
 | [**SH**ow](#SHOW) | Display the response lines for the previous command (even if automatic display is suppressed)|
 | [**SH**ow *nnn*](#SHOW-nnn) | Limit command response output to *nnn* lines |
 | [**SH**ow *heading*\[,*m*\[,*n*\]\]](#SHOW-headingmn) | Display a command response heading of *heading*, and limit command response output to lines *m* to *n* |
 | [**SH**ow '*word* \[*word* ...\]'](#SHOW-word-word-) | Display only those command response lines at contain at least one of the specified words |
-| [**ASSERT** *expression*](#ASSERT-expression) | Evaluates the REXX expression *expression* and sets return code (rc) 0 if true, or 4 if false |
-| [**IF** *expression* **THEN** rc **=** *n*; **ELSE** ...](#if-expression-then-rc--n--else-) | Evaluates the REXX expression *expression* and sets rc to a user-specified return code *n* |
-| [**USING** *template*](#USING-template) | Defines a REXX parsing template for use by the `PASSIF` and `FAILIF` commands |
-| [**PASSIF** *expression*](#PASSIF-expression) | Sets return code 0 if a response line is found where the *expression* evaluates to 1 (true), else sets return code 4. You must first issue the `USING` command to set up a parsing template. |
-| [**FAILIF** *expression*](#FAILIF-expression) | Sets return code 4 if a response line is found where the *expression* evaluates to 1 (true), else sets return code 0. You must first issue the `USING` command to set up a parsing template. |
+| [**ASSERT** *expression*](#ASSERT-expression) | Evaluate the REXX expression *expression* and set return code (rc) 0 if true, or 4 if false |
+| [**IF** *expression* **THEN** rc **=** *n*; **ELSE** ...](#if-expression-then-rc--n--else-) | Evaluate the REXX expression *expression* and set rc to a user-specified return code *n* |
+| [**USING** *template*](#USING-template) | Define a REXX parsing template for use by the `PASSIF` and `FAILIF` commands |
+| [**PASSIF** *expression*](#PASSIF-expression) | Set return code 0 if a response line is found where the *expression* evaluates to 1 (true), else sets return code 4 |
+| [**FAILIF** *expression*](#FAILIF-expression) | Set return code 4 if a response line is found where the *expression* evaluates to 1 (true), else sets return code 0 |
 
 ### HELP
 
@@ -250,12 +250,23 @@ Filter SPOOL files by system name. Reset the filter by omitting the system name.
 
 Filter SPOOL files by destination name. Reset the filter by omitting the destination name.
 
+### **SORT** sortspec
+
+Set the column sorting order for tabular output from an SDSF primary command (DA, I, O, etc).
+You must enter column names rather than column titles (e.g. SORT DATEE D TIMEE D). 
+Issue the [SHOW ?](#show-?) command to list the gamut of column names after you 
+have selected the SDSF primary command (DA, I, O etc).
+
 ### *sdsfcommand*
 
-SDSF primary commands (`DA`, `O`, `H`, `I`, `ST`, `PS`, etc) can be issued. The response
+Issue an SDSF primary command (`DA`, `O`, `H`, `I`, `ST`, `PS`, etc). The response
 is stored in `line.n` REXX variables. Only a subset of the columns
 is returned, but you can adjust this by updating the PIV REXX
 procedure to set the `g.0COLS.` variables as required.
+
+### ?
+
+List spool datasets for a job (when issued after DA, O, H, I or ST primary command).
 
 ### Select *jobname* [*sysoutdd* [*stepname* [*procstep*]]]
 
@@ -265,10 +276,6 @@ an SDSF primary command (DA, O, I etc).
 
 You can refine the sysout to be selected by
 sysoutdd, step name, and proc step name.
-
-### **SORT** sortspec
-
-Sort the tabular output from an SDSF primary command (DA, I, O, etc) according to the sort specification (e.g. SORT DATEE D TIMEE D). You must enter column names rather than column titles. Issue the `SHOW ?` command to list the gamut of column names after you have selected the SDSF primary command (DA, I, O etc).
 
 ### USS *usscommand*
 
@@ -284,21 +291,32 @@ For example:
 This is a PIV command to read the contents of the
 specified dataset into the `line.n` variables.
 
-If `dsn` contains a `.` then it is treated as a
-fully qualified dataset name that will be
-dynamically allocated, otherwise it is assumed to
-be the name of a pre-allocated DD in your JCL.
-
-If `dsn` contains a `/` then it is treated as a
+If `dsn` contains a `/` then it is treated as a (case-sensitive)
 Unix path name. The content of the file will be
 converted to EBCDIC (IBM-1047) if necessary.
+
+If `dsn` contains a `.` then it is treated as a (case-insensitive)
+fully qualified dataset name that will be
+dynamically allocated.
+
+Otherwise it is assumed to
+be the name of a pre-allocated DD in your JCL.
+
+For example,
+
+| Command                     | Description                                      | 
+| -------                     | -----------                                      |
+| read sys1.parmlib(ieasys00) | Reads the IEASYS00 member of SYS1.PARMLIB        |
+| read /etc/profile           | Reads the contents of the Unix /etc/profile file |
+| read MYDD                   | Reads the dataset allocated as DD: MYDD          |
+
 
 ### SET *var* = *value*
 
 This is a PIV command to set an SDSF/REXX interface special variable.
 
 The complete list of valid variables is described in
-"SDSF Operation and Customization" (SA23-2274)
+"SDSF Operation and Customization" (manual SA23-2274)
 in Table 180 "Special REXX Variables".
 
 Some useful ones (when using `XD`, `XDC`, `XF`, or `XFC`) are:
@@ -324,6 +342,18 @@ ISFPRTDSNAME (see the [SET](#SET-var--value) command above).
 You can refine the sysout to be selected by
 sysoutdd, step name, and proc step name.
 
+You must have already issued either `DA`, `I`, `H`, `O` or `ST`
+before you can export spool files. 
+
+For example, 
+
+| Command                       | Description | 
+| -------                       | ----------- |
+| o<br/>xd myjob                | Displays the SDSF output panel columns (subject to filtering by `PREFIX` etc)<br/>Reads all output spool datasets from MYJOB |
+| xd myjob sysprint             | Reads only SYSPRINT output from all steps of MYJOB |
+| xd myjob sysprint asmlink     | Reads only SYSPRINT output from step ASMLINK of MYJOB |
+| xd myjob sysprint asmlink asm | Reads only SYSPRINT output from procstep ASM of step ASMLINK of MYJOB |
+
 ### XDC *jobname* [*sysoutdd* [*stepname* [*procstep*]]
 
 This is the same as `XD` command except that the output
@@ -338,12 +368,15 @@ variable ISFPRTDDNAME (see the [SET](#SET-var--value) command above).
 You can refine the sysout to be selected by
 sysoutdd, step name, and proc step name.
 
+You must have already issued either `DA`, `I`, `H`, `O` or `ST`
+before you can export spool files. 
+
 ### XFC *jobname* [*sysoutdd* [*stepname* [*procstep*]]
 This is the same as `XF` command except that the output
 ddname is also Closed.
 
 ### SHOW ?
-Lists the possible column names for the
+List the possible column names for the
 SDSF primary command last issued (e.g. DA, O, etc)
 
 For example, to list all the available column names for the
@@ -356,27 +389,31 @@ This is a convenience command so that you don't have to refer
 to the manual.
 
 ### SHOW *column* [*column* ...]
-Displays specific columns (for example, JNAME,
-JOBID, PNAME). Use `SHOW ?` to list all the
+Display specific columns (for example, JNAME,
+JOBID, PNAME). Use [SHOW ?](#show-?) to list all the
 valid column names that you can specify for a
 particular ISPF panel (DA, O, ST, etc).
 
 ### SHOW ON
-Automatically prints command output from now on.
+Automatically print command output. This is the default.
 
 ### SHOW OFF
-Suppresses printing command output from now on.
+Suppress printing of command output.
 
 ### SHOW
-Displays either the contents of the default columns appropriate for
+Display either the contents of the default columns appropriate for
 the SDSF primary command last issued or the current
-contents of the `line.n` variables (if the
-command last issued was READ). This is useful if you have suppressed
-displaying responses (using `SHOW OFF`) and want to display
+contents of the `line.n` variables.
+
+This is useful when you have suppressed
+displaying responses (using [SHOW OFF](#show-off)) and want to display
 the response for a particular command.
 
-### SHOW *nnn*
-Limits the acquired output to *nnn* lines maximum.
+### SHOW *n*
+Limit the acquired output to *n* lines maximum. The default is 1000
+lines. This applies to output from all commands (i.e. z/OS command
+output, USS commands, and lines read from datasets or files). It 
+essentially limits the number of `line.n` stem variables used.
 
 ### SHOW *heading*[,*m*[,*n*]]
 Prints the heading text followed by lines with
@@ -393,6 +430,11 @@ by the last 5 lines of output.
 
 Prints only output lines that contain at least one of the
 specified words.
+
+This is useful when you only want to see messages
+relating to a limited subject, for example:
+
+    show 'LICENSE EXPIRE ERROR INVALID ABEND'
 
 ### ASSERT *expression*
 
@@ -416,24 +458,25 @@ present in the command response, else set return code 4"
 
 ### IF *expression* THEN rc = *n* [; ELSE ...]
 
-This has exactly the same syntax as the REXX `if`
+This is similar to `ASSERT` but lets you set whatever return code
+you want. Note that the PIV step will exit with the **highest**
+return code you set by any of the `IF`, `ASSERT`, or `FAILIF`
+PIV commands.
+
+The `IF` command has exactly the same syntax as the REXX `if`
 statement. The ASSERT example above could be
 equivalently written as:
 
-  if \isPresent('SOMETHING') then rc = 8
+  if \isPresent('SOMETHING') then rc = 4
 
 ...which means:
 
 "If the string 'SOMETHING' is not (\) present in
-the command response then set return code 8, else set return
+the command response then set return code 4, else set return
 code 0"
 
 The ELSE clause is rarely needed and is only included
 for completeness.
-
-The PIV REXX procedure will eventually exit with the maximum
-return code set by any of the `IF`, `ASSERT`, or `FAILIF`
-PIV commands.
 
 
 ### USING *template*
@@ -450,8 +493,7 @@ variable in order to test it.
 - USING  sets the parsing template to be applied
   to each line of the command response. The *template*
   can be anything that is valid after a REXX
-  `parse var line.n` statement, where n ranges from 1
-  to the number of response lines.
+  `parse var line.n` statement.
 
 - PASSIF sets the return code to 0 if the REXX
   *expression* on PASSIF evaluates to 1 (true), or 4 if the
@@ -477,9 +519,9 @@ To verify this, you could use:
 This will cause each line of the command response to be
 parsed (using `parse var line.n msg percent .`) causing
 the first and second words of each
-line to be assigned to the REXX variables 'msgno'
-and 'percent' respectively. If a line is found
-where 'msgno' is '$HASP646' and the 'percent'
+line to be assigned to the REXX variables `msgno`
+and `percent` respectively. If a line is found
+where `msgno` is '$HASP646' and the `percent`
 value is less than 80, then return code 0 is set.
 If no line containing $HASP646 is found, or the
 percent value is more than 80, then return code
@@ -489,7 +531,7 @@ The processing of command response lines stops
 when the expression on `PASSIF` or `FAILIF` is true.
 
 Alternatively, you could examine the $HASP893
-messages:
+message (which has a lower resolution percentage):
 
     /$DSPOOL
     USING msgno . 'PERCENT='percent .
